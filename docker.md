@@ -11,17 +11,26 @@ sudo apt-get install -y \
      ca-certificates \
      curl \
      gnupg2 \
+     python3-pip \
      software-properties-common
 
 # Get the Docker signing key for packages
-curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID_LIKE")/gpg | sudo apt-key add -
 
 # Add the Docker official repos
-echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID_LIKE") $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
 
 # Install Docker
 sudo apt-get update
 sudo apt-get install -y docker-ce
+
+# Instakk Docker Compose
+sudo pip3 install setuptools wheel
+sudo pip3 install docker-compose
+
+# bash completition for docker-compose
+sudo mkdir /etc/bash_completion.d
+sudo curl -L https://raw.githubusercontent.com/docker/compose/1.21.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
 # Start docker service
 sudo systemctl enable docker
